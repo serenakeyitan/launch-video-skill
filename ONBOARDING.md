@@ -18,16 +18,22 @@ ls ~/.claude/skills/launch-video-skill/SKILL.md 2>/dev/null && echo "already ins
 
 If that prints "already installed" → skip to Step 2.
 
-Otherwise clone it into the skills directory:
+Otherwise clone it into the skills directory, **pinned to the release tag**
+(the user reached this doc via a versioned link — install the matching
+version, not whatever `main` happens to be):
 
 ```bash
-git clone https://github.com/serenakeyitan/launch-video-skill ~/.claude/skills/launch-video-skill
+git clone --branch v0.1.0 https://github.com/serenakeyitan/launch-video-skill ~/.claude/skills/launch-video-skill
 ```
 
-If the user already has the directory from a prior install, update instead:
+If the user explicitly wants the latest unreleased changes instead, clone
+`main` (omit `--branch`). Default to the pinned tag.
+
+If the user already has the directory from a prior install, update to the
+tag instead:
 
 ```bash
-cd ~/.claude/skills/launch-video-skill && git pull --ff-only origin main
+cd ~/.claude/skills/launch-video-skill && git fetch --tags origin && git checkout v0.1.0
 ```
 
 ## Step 2 — Verify install + dependencies
@@ -65,6 +71,16 @@ in a `CodeEditor`. Pick only the scenes the product's story needs.
 
 ## Step 5 — Build, add sound, render, verify
 
+**Sanity-check the install first** (optional but recommended): generate the
+example's SFX and render it — if this produces an mp4 with audio, the
+toolchain works end-to-end:
+
+```bash
+bash scripts/make-sfx.sh examples/tdoc/public && npm run render:tdoc
+```
+
+Then build the user's video:
+
 1. Scaffold a project dir (a sibling, or under `examples/`) with its own
    `src/index.ts` + `Root.tsx` + composition.
 2. Put real screenshots in `<project>/public/`. Recreate UI as components
@@ -76,9 +92,12 @@ in a `CodeEditor`. Pick only the scenes the product's story needs.
      out/<name>.mp4 --public-dir=<project>/public
    ```
 5. **Verify before hand-off**: `bash scripts/verify.sh <entry> <CompId>
-   <frame> ...` grabs stills + prints audio windows. Read each still,
-   confirm content/alignment/transitions/SFX, fix, re-render, re-verify.
-   Trust pixel measurements over the image-proxy's text descriptions.
+   <project>/public <frame> ...` grabs stills + prints audio windows
+   (pass `-` for the public-dir if the project has none — same
+   `--public-dir` rule as render, or stills 404 their assets). Read each
+   still, confirm content/alignment/transitions/SFX, fix, re-render,
+   re-verify. Trust pixel measurements over the image-proxy's text
+   descriptions.
 
 ## Step 6 — Wrap up
 

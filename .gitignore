@@ -2,3 +2,7 @@ node_modules/
 out/
 .DS_Store
 *.log
+
+# Generated SFX — regenerate with scripts/make-sfx.sh (not committed)
+**/sfx-typing.mp3
+**/sfx-click.mp3

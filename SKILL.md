@@ -77,7 +77,9 @@ These are independent. A library launch might be just `CodeEditor` +
 ## Audio rules
 
 - Run `scripts/make-sfx.sh <project>/public` to synthesize
-  `sfx-typing.mp3` + `sfx-click.mp3` (no binaries committed).
+  `sfx-typing.mp3` + `sfx-click.mp3`. These are git-ignored generated
+  artifacts — always (re)generate them; never rely on them being present
+  after a fresh clone.
 - Typing SFX plays **only while a human is typing** (a prompt, a comment).
   Never over auto-streamed/agent output.
 - Click SFX fires **on the press frame** of each cursor click (link,
@@ -90,8 +92,10 @@ These are independent. A library launch might be just `CodeEditor` +
 The image-proxy that reads PNGs is OCR-noisy — **trust pixel measurements
 (Python/PIL/numpy), not text descriptions**, for alignment/color.
 
-1. `scripts/verify.sh <entry> <CompId> <frame> ...` grabs stills + prints
-   audio windows.
+1. `scripts/verify.sh <entry> <CompId> <public-dir> <frame> ...` grabs
+   stills + prints audio windows. Pass the project's `public/` as
+   `<public-dir>` (or `-` if it has none) — same `--public-dir` rule as
+   render; stills 404 their assets otherwise.
 2. Read each still. For every changed beat, confirm: content correct,
    nothing clipped by `overflow:hidden`, transitions land, cursor on
    target, SFX windows align with the visible click/typing frames.

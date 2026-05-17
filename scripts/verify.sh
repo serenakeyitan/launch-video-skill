@@ -1,13 +1,24 @@
 #!/usr/bin/env bash
 # Frame-grab a render at given frames for visual QA, and print audio windows.
-# Usage:  scripts/verify.sh <entry> <CompId> <frame1> [frame2 ...]
+# Usage:  scripts/verify.sh <entry> <CompId> <public-dir> <frame1> [frame2 ...]
+#   <public-dir>  the project's public/ dir, passed as --public-dir so
+#                  staticFile() assets resolve (use "-" if the project has
+#                  none / uses repo-root public/).
 # Then Read the out/verify-<frame>.png files. Audio windows help confirm
 # typing/click SFX land on the right beats.
 set -euo pipefail
-ENTRY="$1"; COMP="$2"; shift 2
+if [ "$#" -lt 4 ]; then
+  echo "usage: verify.sh <entry> <CompId> <public-dir> <frame> [frame ...]" >&2
+  echo "  pass '-' for <public-dir> if the project has no public/ dir" >&2
+  exit 2
+fi
+ENTRY="$1"; COMP="$2"; PUBDIR="$3"; shift 3
+PD=()
+[ "$PUBDIR" != "-" ] && PD=(--public-dir="$PUBDIR")
 mkdir -p out
 for fr in "$@"; do
-  npx remotion still "$ENTRY" "$COMP" "out/verify-$fr.png" --frame="$fr" >/dev/null 2>&1
+  # Do NOT silence: a staticFile 404 must be visible, not swallowed.
+  npx remotion still "$ENTRY" "$COMP" "out/verify-$fr.png" --frame="$fr" "${PD[@]}"
   echo "out/verify-$fr.png"
 done
 if [ -f out/*.mp4 ] 2>/dev/null; then :; fi

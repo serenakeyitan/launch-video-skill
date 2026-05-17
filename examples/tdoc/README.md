@@ -25,11 +25,18 @@ clone its story** — design each product's own arc (see ../../SKILL.md).
 
 ## Render
 
+SFX are **not committed** (generated artifacts) — generate them first, then
+render. From the repo root:
+
 ```bash
-bash ../../scripts/make-sfx.sh public      # regenerate SFX if missing
-# from the repo root (note --public-dir so staticFile() resolves assets):
+# 1. generate SFX into this example's public/ (required — not committed)
+bash scripts/make-sfx.sh examples/tdoc/public
+# 2. render (npm script already includes the --public-dir flag)
 npm run render:tdoc
-# or directly:
+# …equivalent to:
 npx remotion render examples/tdoc/src/index.ts TdocDemo \
   out/tdoc-demo.mp4 --public-dir=examples/tdoc/public
 ```
+
+`npm run render:tdoc` is also the **install smoke-test** — if it produces an
+mp4 with audio, the skill works end-to-end.
