@@ -10,6 +10,21 @@ in an editor. This skill gives you composable scenes and a workflow that
 makes you **design the arc for the specific product first**, then assemble
 it.
 
+## Install
+
+Paste this into Claude Code or Codex:
+
+```
+Install launch-video-skill by following https://github.com/serenakeyitan/launch-video-skill/blob/v0.1.0/ONBOARDING.md
+```
+
+That's it — the agent clones the skill, installs deps, and reads the
+workflow. Then just ask: *"make a launch video for &lt;your product&gt;"*.
+
+(Pin to the latest release tag — see
+[Releases](https://github.com/serenakeyitan/launch-video-skill/releases).
+Want to track unreleased changes instead? Swap `v0.1.0` for `main`.)
+
 ## What's inside
 
 ```
