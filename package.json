@@ -1,0 +1,21 @@
+{
+  "name": "launch-video-skill",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A skill for generating product launch videos with Remotion — a reusable scene library + an arc-design-first workflow.",
+  "scripts": {
+    "studio": "remotion studio",
+    "render:tdoc": "remotion render examples/tdoc/src/index.ts TdocDemo out/tdoc-demo.mp4 --public-dir=examples/tdoc/public",
+    "still": "remotion still"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.290",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "remotion": "4.0.290"
+  },
+  "devDependencies": {
+    "@types/react": "19.0.0",
+    "typescript": "5.5.4"
+  }
+}
