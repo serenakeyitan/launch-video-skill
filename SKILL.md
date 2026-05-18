@@ -73,6 +73,11 @@ These are independent. A library launch might be just `CodeEditor` +
   scale-down on click. Every click gets a click SFX on the press frame.
 - **No double chrome.** If a screenshot already has a header, use
   `chrome="none"`. Don't stack a window bar on top of a baked one.
+- **Brand-card bookend.** Reuse one brand card (logo/mascot + product
+  name + one-line value prop) as BOTH the opening and closing frame
+  (≈1.5–2.5s each). It frames the story and is cheaper than a separate
+  animated logo end-card. Drive all beat offsets off an `at()` accumulator
+  so adding the intro card auto-shifts everything (incl. SFX) downstream.
 
 ## Audio rules
 
@@ -117,8 +122,10 @@ npx remotion render <entry> <CompId> out/<name>.mp4 \
 
 ## Reference example
 
-`examples/tdoc/` is the canonical worked example: an engineer asks an
-agent (Terminal) to build a doc, gets a link, the doc opens
-(BrowserWindow), teammates comment, the agent ships v2, LogoCard outro —
-with typing/click SFX and a PixelPet. **Read it to see the library in
-use; do not clone its story.** Build the new product's own arc.
+`examples/tdoc/` is the canonical worked example (≈39s): a brand-card
+intro, an engineer types a `/tdoc …` prompt to an agent (Terminal,
+slash-command auto-highlighted), gets a link, the doc opens
+(BrowserWindow), teammates comment, the agent ships v2, then the same
+brand card closes it — with typing/click SFX scoped to real typing and a
+`PixelPet` whose eyes bob. **Read it to see the library in use; do not
+clone its story.** Build the new product's own arc.

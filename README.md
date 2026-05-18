@@ -30,15 +30,19 @@ Want to track unreleased changes instead? Swap `v0.1.0` for `main`.)
 ```
 SKILL.md              the workflow + rules (read this first)
 src/
-  scenes/             Terminal · BrowserWindow · MobileFrame · CodeEditor · Outro
+  scenes/             Terminal · BrowserWindow · MobileFrame · CodeEditor · Outro/LogoCard
   lib/                WaveBackground · Cursor · PixelPet · Caption · theme
   index.ts            barrel export
 scripts/
   make-sfx.sh         synthesize typing/click SFX (ffmpeg, no committed binaries)
-  verify.sh           grab QA stills + print audio windows
+  verify.sh           QA stills + audio windows  (<entry> <CompId> <public-dir> <frames…>)
 examples/
-  tdoc/               canonical worked example (terminal → browser → outro)
+  tdoc/               canonical worked example (~39s: brand-card → terminal → browser → brand-card)
 ```
+
+Library niceties baked in: a leading `/slash-command` in a `Terminal`
+typed prompt auto-highlights; `PixelPet` eyes gently bob (no eye-whites);
+brand-card bookend pattern (one card opens & closes the video).
 
 ## Quick start
 
