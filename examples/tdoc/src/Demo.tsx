@@ -38,13 +38,15 @@ const D = {
   // holds. No internal cuts (kills the flash + the tab-bar swap).
   askflow: 224, // ~9.3s  (session types → cursor clicks → doc opens, short hold)
   comment: 150, // ~6.3s  (select → type → click Comment button → card lands)
-  share: 130,   // ~5.4s  ("you" comment, then 2 teammates chime in)
+  share: 106,   // ~4.4s  ("you" comment, then 2 teammates chime in)
   fix: 162,     // ~6.8s  (pull 3 comments → write v2 → ship)
   v2: 150,      // ~6.3s  (green ring + all 3 comments resolved)
-  outro: 66,    // ~2.8s
-  logo: 76,     // ~3.2s
+  outro: 90,    // ~3.75s  (final card — 1s longer per request)
 };
-export const TOTAL = Object.values(D).reduce((s, n) => s + n, 0); // 1279 ≈ 53s
+// 2.5s @ 24fps — the Outro card is reused as the opening frame (1s longer).
+export const INTRO = 60;
+export const TOTAL =
+  Object.values(D).reduce((s, n) => s + n, 0) + INTRO;
 
 const ease = (f: number, a: number, b: number, x: number, y: number) =>
   interpolate(f, [a, b], [x, y], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -152,7 +154,7 @@ const TermStage: React.FC<{
               transform: "translateX(-50%)",
             }}
           >
-            <FirstTreeLogo size={8} color="#e07856" />
+            <FirstTreeLogo size={8} color="#2f7d4f" />
           </div>
         ) : null}
         {children}
@@ -185,7 +187,7 @@ const CenteredWindow: React.FC<{
               transform: "translateX(-50%)",
             }}
           >
-            <FirstTreeLogo size={8} color="#e07856" />
+            <FirstTreeLogo size={8} color="#2f7d4f" />
           </div>
         ) : null}
         <Win title={title} w={w} h={h}>
@@ -206,7 +208,7 @@ const TH = 560; // fits the streamed content tightly — no dead space below
 // list with every at:0 (already settled). Identical content + order + blank
 // lines → identical layout, so the Ask→ClickLink cut is invisible.
 const SESSION_AT = [
-  { k: "prompt", at: 6, typed: true, text: "design a water drinking app and write a spec using tdoc, deploy to cloudflare" },
+  { k: "prompt", at: 6, typed: true, text: "/tdoc design a water drinking app and write a spec, deploy to cloudflare" },
   { k: "blank", at: 60 },
   { k: "bullet", at: 64, text: "I'll use the tdoc skill to create and deploy the spec." },
   { k: "tool", at: 76, name: "Skill", args: "tdoc" },
@@ -332,16 +334,16 @@ const AskFlow: React.FC = () => {
               gap: 14,
             }}
           >
-            <FirstTreeLogo size={8} color="#e07856" />
+            <FirstTreeLogo size={8} color="#2f7d4f" />
             <span
               style={{
-                fontFamily: tw.mono,
-                fontSize: 22,
-                fontWeight: 600,
-                color: "#e07856",
+                fontFamily: SERIF,
+                fontSize: 30,
+                color: "#2b3a30",
+                letterSpacing: "-0.5px",
               }}
             >
-              use <span style={{ color: "#2b3a30" }}>/tdoc</span> skill
+              use <span style={{ fontWeight: 700 }}>/tdoc</span> skill
             </span>
           </div>
           <ClaudeTerminal
@@ -808,16 +810,16 @@ const Fix: React.FC = () => {
             gap: 14,
           }}
         >
-          <FirstTreeLogo size={8} color="#e07856" />
+          <FirstTreeLogo size={8} color="#2f7d4f" />
           <span
             style={{
-              fontFamily: tw.mono,
-              fontSize: 22,
-              fontWeight: 600,
-              color: "#e07856",
+              fontFamily: SERIF,
+              fontSize: 30,
+              color: "#2b3a30",
+              letterSpacing: "-0.5px",
             }}
           >
-            use <span style={{ color: "#2b3a30" }}>/tdoc</span> skill
+            use <span style={{ fontWeight: 700 }}>/tdoc</span> skill
           </span>
         </div>
         <div style={{ position: "relative" }}>
@@ -827,7 +829,7 @@ const Fix: React.FC = () => {
             h={TH}
             lines={
               [
-                { k: "prompt", at: 6, typed: true, text: "address the comments on the hydrate spec" },
+                { k: "prompt", at: 6, typed: true, text: "/tdoc address the comments on the hydrate spec" },
                 { k: "blank", at: 44 },
                 { k: "tool", at: 48, name: "Bash", args: "tdoc-pull hydrate-app-spec" },
                 { k: "result", at: 58, text: "pulled 3 open comments" },
@@ -888,7 +890,7 @@ const PANEL_BG = "#f5f9fc";
 const GreenRing: React.FC = () => {
   const VB = (RING_R + 30) * 2; // viewBox with margin for the dot + stroke
   const c = VB / 2;
-  const sw = 14; // stroke wide enough to fully cover the original track
+  const sw = 22; // stroke wide enough to fully cover the original track
   const C = 2 * Math.PI * RING_R;
   return (
     <svg
@@ -897,10 +899,10 @@ const GreenRing: React.FC = () => {
       viewBox={`0 0 ${VB} ${VB}`}
       style={{ position: "absolute", left: RING_CX - c, top: RING_CY - c }}
     >
-      {/* erase the original gray/blue ring with a panel-bg annulus */}
-      <circle cx={c} cy={c} r={RING_R} fill="none" stroke={PANEL_BG} strokeWidth={sw + 6} />
-      {/* erase the blue dot at the top */}
-      <circle cx={c} cy={c - RING_R} r={12} fill={PANEL_BG} />
+      {/* erase the original gray/blue ring with a wide panel-bg annulus */}
+      <circle cx={c} cy={c} r={RING_R} fill="none" stroke={PANEL_BG} strokeWidth={sw + 10} />
+      {/* erase the blue dot + arc start at the top (generous disc) */}
+      <circle cx={c} cy={c - RING_R} r={20} fill={PANEL_BG} />
       {/* the new green track */}
       <circle cx={c} cy={c} r={RING_R} fill="none" stroke="#d8ead7" strokeWidth={10} />
       {/* small green progress arc (0% state, like the original) */}
@@ -1023,11 +1025,29 @@ const Outro: React.FC = () => {
   return (
     <AbsoluteFill style={{ background: "#0e0e0e", justifyContent: "center", alignItems: "center", opacity: o }}>
       <div style={{ textAlign: "center" }}>
-        <div style={{ display: "flex", justifyContent: "center", gap: 26, marginBottom: 42 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 22,
+            marginBottom: 42,
+          }}
+        >
           <FirstTreeLogo size={11} color="#ffffff" />
+          <span
+            style={{
+              fontFamily: SERIF,
+              fontSize: 64,
+              color: "#fff",
+              letterSpacing: "-1px",
+            }}
+          >
+            /tdoc
+          </span>
         </div>
         <div style={{ fontFamily: SERIF, fontSize: 52, color: "#fff", lineHeight: 1.3 }}>
-          One prompt to a shareable doc.
+          Google Doc, but designed for agents.
         </div>
         <div style={{ fontFamily: SERIF, fontSize: 28, color: "#9a9a9a", marginTop: 16 }}>
           Comments straight into your agent.
@@ -1081,6 +1101,8 @@ export const Demo: React.FC = () => {
     t += n;
     return from;
   };
+  const f_introCard = at(INTRO); // 2.5s Outro card as the opening frame
+  const sageStart = t; // sage bg begins after the intro card
   const sageEnd =
     D.askflow + D.comment + D.share + D.fix + D.v2;
   const f_askflow = at(D.askflow);
@@ -1089,11 +1111,13 @@ export const Demo: React.FC = () => {
   const f_fix = at(D.fix);
   const f_v2 = at(D.v2);
   const f_outro = at(D.outro);
-  const f_logo = at(D.logo);
   const OUT = 5;
   return (
     <AbsoluteFill>
-      <Sequence durationInFrames={sageEnd}>
+      <Sequence from={f_introCard} durationInFrames={INTRO}>
+        <Outro />
+      </Sequence>
+      <Sequence from={sageStart} durationInFrames={sageEnd}>
         <SageBackground />
       </Sequence>
       <Sequence from={f_askflow} durationInFrames={D.askflow + OUT}>
@@ -1113,9 +1137,6 @@ export const Demo: React.FC = () => {
       </Sequence>
       <Sequence from={f_outro} durationInFrames={D.outro}>
         <Outro />
-      </Sequence>
-      <Sequence from={f_logo} durationInFrames={D.logo}>
-        <Logo />
       </Sequence>
 
       {/* ── SFX ──────────────────────────────────────────────────────────

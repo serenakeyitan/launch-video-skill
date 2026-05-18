@@ -41,14 +41,25 @@ const Caret: React.FC<{ on: boolean }> = ({ on }) => {
   );
 };
 
-// Typed prompt: characters reveal over ~the line's window.
+// Typed prompt: characters reveal over ~the line's window. A leading
+// slash-command (e.g. "/tdoc") is rendered in the accent color and bold
+// so the skill invocation is highlighted as it's typed.
 const Typed: React.FC<{ text: string; at: number; cps?: number }> = ({ text, at, cps = 36 }) => {
   const f = useCurrentFrame();
   const n = Math.max(0, Math.floor(((f - at) / 24) * cps));
   const done = n >= text.length;
+  const shown = text.slice(0, n);
+  const m = /^(\/[A-Za-z][\w-]*)(.*)$/s.exec(shown);
   return (
     <span style={{ color: C.text }}>
-      {text.slice(0, n)}
+      {m ? (
+        <>
+          <span style={{ color: C.lime, fontWeight: 700 }}>{m[1]}</span>
+          {m[2]}
+        </>
+      ) : (
+        shown
+      )}
       <Caret on={!done} />
     </span>
   );

@@ -47,14 +47,14 @@ Import from the library; assemble only what the story needs.
 
 | Scene | Use it for | Key props |
 |---|---|---|
-| `Terminal` | CLI tools, agents, dev tools — story in a shell | `lines` (typed prompt, tool calls, results, alert, url), `spinner`, `title` |
+| `Terminal` | CLI tools, agents, dev tools — story in a shell | `lines` (typed prompt, tool calls, results, alert, url), `spinner`, `title`. A leading `/slash-command` in a typed prompt auto-highlights bold accent. |
 | `BrowserWindow` | web apps, docs, dashboards, SaaS | screenshot/HTML as children, `chrome="bar"\|"none"` |
 | `MobileFrame` | mobile apps | phone shell; screenshot/UI as children |
 | `CodeEditor` | libraries, SDKs — "write this → get that" | `code` lines, typed reveal |
 | `Outro` / `LogoCard` | sign-off (optional) | headline/subhead, or spinning logo + wordmark |
 | `WaveBackground` | calm branded backdrop behind any window | colors |
 | `Cursor` | click an artifact/link/button | from/to coords, `clickAt` |
-| `PixelPet` | a friendly mascot above a window | `crown`/`base` pixel rows, `color` |
+| `PixelPet` | a friendly mascot above a window | `crown`/`base` pixel rows, `color`; eyes bob up/down (no eye-whites — reads clean small) |
 | `Caption` | one-line kicker under a window | `at`, `text` |
 
 These are independent. A library launch might be just `CodeEditor` +

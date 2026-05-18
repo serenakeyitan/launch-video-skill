@@ -116,16 +116,12 @@ export const FirstTreeLogo: React.FC<{
 }> = ({ size = 9, color = "#e07856", float = true }) => {
   const frame = useCurrentFrame();
   const y = float ? Math.sin(frame / 22) * 5 : 0;
-  // Blink: a quick 2-frame eye-close roughly every ~70 frames, with a
-  // longer happy squint that lands on a slower cadence.
-  const cyc = frame % 72;
-  const blink = cyc < 3;
-  const squint = frame % 168 < 10 && frame % 168 >= 3;
-  const eyeRows = blink
-    ? ["TT^TTT^TT", "TTTTTTTTT"]
-    : squint
-    ? ["TT^TTT^TT", "TToTTToTT"]
-    : ["TToTTToTT", "TT#TTT#TT"];
+  // No eye-whites — just a solid black eyeball that bobs up and down
+  // between the two eye rows on a gentle cadence (cute "looking around").
+  const lookUp = frame % 44 < 22; // ~0.9s down, ~0.9s up
+  const eyeRows = lookUp
+    ? ["TT#TTT#TT", "TTTTTTTTT"] // eyeball in the upper row
+    : ["TTTTTTTTT", "TT#TTT#TT"]; // eyeball in the lower row
   const grid = [
     "....T....",
     "...TTT...",

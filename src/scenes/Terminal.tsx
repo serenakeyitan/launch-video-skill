@@ -36,6 +36,10 @@ const Caret: React.FC<{ on: boolean }> = ({ on }) => {
   );
 };
 
+// Typed prompt: characters reveal over the line's window. A leading
+// slash-command (e.g. "/deploy", "/tdoc") is rendered bold in the accent
+// color so the invocation reads as the highlighted action — useful for any
+// CLI/agent product whose story starts with a slash command.
 const Typed: React.FC<{ text: string; at: number; cps?: number }> = ({
   text,
   at,
@@ -43,9 +47,18 @@ const Typed: React.FC<{ text: string; at: number; cps?: number }> = ({
 }) => {
   const f = useCurrentFrame();
   const n = Math.max(0, Math.floor(((f - at) / 24) * cps));
+  const shown = text.slice(0, n);
+  const m = /^(\/[A-Za-z][\w-]*)(.*)$/s.exec(shown);
   return (
     <span style={{ color: term.text }}>
-      {text.slice(0, n)}
+      {m ? (
+        <>
+          <span style={{ color: term.lime, fontWeight: 700 }}>{m[1]}</span>
+          {m[2]}
+        </>
+      ) : (
+        shown
+      )}
       <Caret on={n < text.length} />
     </span>
   );

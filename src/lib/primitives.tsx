@@ -118,13 +118,14 @@ export const Cursor: React.FC<{
 };
 
 // ── Pixel "pet" mascot with expressions ────────────────────────────────────
-// A friendly pixel creature (Claude-Code-pet style): floats, blinks, and
-// gives a happy squint on a cadence. `grid` lets a project supply its own
+// A friendly pixel creature (Claude-Code-pet style): floats and its eyes
+// gently bob up and down ("looking around"). No eye-whites — just a solid
+// dark eyeball that moves between two rows, which reads cleaner at small
+// sizes than a white-backed blink. `grid` lets a project supply its own
 // 9-col pixel art; default is a generic rounded blob with a face. `color`
-// is the body fill. Eye/mouth rows are swapped for the blink/squint frames.
-const FACE_OPEN = ["XXoXXXoXX", "XX#XXX#XX", "XXXvvvXXX"];
-const FACE_BLINK = ["XX^XXX^XX", "XXXXXXXXX", "XXXvvvXXX"];
-const FACE_SQUINT = ["XX^XXX^XX", "XXoXXXoXX", "XXXvvvXXX"];
+// is the body fill; the mouth + eyeball use the dark detail color.
+const FACE_EYE_DOWN = ["XXXXXXXXX", "XX#XXX#XX", "XXXvvvXXX"];
+const FACE_EYE_UP = ["XX#XXX#XX", "XXXXXXXXX", "XXXvvvXXX"];
 
 export const PixelPet: React.FC<{
   size?: number;
@@ -145,9 +146,9 @@ export const PixelPet: React.FC<{
 }) => {
   const frame = useCurrentFrame();
   const y = float ? Math.sin(frame / 22) * 5 : 0;
-  const blink = frame % 72 < 3;
-  const squint = frame % 168 >= 3 && frame % 168 < 11;
-  const face = blink ? FACE_BLINK : squint ? FACE_SQUINT : FACE_OPEN;
+  // Eyeball bobs: ~0.9s down, ~0.9s up.
+  const lookUp = frame % 44 < 22;
+  const face = lookUp ? FACE_EYE_UP : FACE_EYE_DOWN;
   const grid = [...crown, ...face, ...base];
   const fill = (c: string) => {
     if (c === "X") return color;

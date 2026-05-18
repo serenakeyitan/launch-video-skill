@@ -22,7 +22,7 @@ export const tw = {
   faint: "#6e6e6e",
   accent: "#e67e6f", // coral (mascot/logo)
   amber: "#d9a441", // needs-reply / footer hint
-  orange: "#e08a4e", // prompt caret
+  orange: "#e08a4e", // prompt caret (unused Caret export)
   blue: "#6fa8e0", // working
   green: "#5fae79", // resolved
   magenta: "#d9457a", // inline reply box border
